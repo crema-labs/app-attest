@@ -5,6 +5,29 @@ import elliptic, { SignatureInput } from "elliptic";
 import crypto from "crypto";
 
 describe("Attestation", () => {
+  const verifySig = (
+    curve: string,
+    hash: string,
+    r: string,
+    s: string,
+    p_x: string,
+    p_y: string,
+    tbs: Buffer,
+    id: string
+  ) => {
+    const ec = new elliptic.ec(curve);
+    const key = ec.keyFromPublic({ x: p_x, y: p_y }, "hex");
+    const hashMessage = crypto.createHash(hash).update(tbs).digest();
+
+    const signature: SignatureInput = {
+      r: r,
+      s: s,
+    };
+
+    const isValid = key.verify(hashMessage, signature);
+
+    console.log(id, "isValid:", isValid);
+  };
   describe("VerifyCertChain", () => {
     let circuit: WitnessTester<["r", "s", "TBSData", "PubKeys"], ["out"]>;
 
@@ -67,18 +90,9 @@ describe("Attestation", () => {
 
       const TBSData = [bufferToBigIntArray(tbs1), bufferToBigIntArray(tbs2), bufferToBigIntArray(tbs3)];
 
-      const ec = new elliptic.ec("p384");
-      const key = ec.keyFromPublic({ x: x1, y: y1 }, "hex");
-      const hashMessage = crypto.createHash("sha384").update(tbs1).digest();
-
-      const signature: SignatureInput = {
-        r: r1,
-        s: s1,
-      };
-
-      const isValid = key.verify(hashMessage, signature);
-
-      console.log("isValid:", isValid);
+      verifySig("p384", "sha256", r1, s1, x1, y1, tbs1, "cert 1");
+      verifySig("p384", "sha384", r2, s2, x2, y2, tbs2, "cert 2");
+      verifySig("p384", "sha384", r3, s3, x2, y2, tbs3, "cert 3");
 
       circuit.expectPass(
         {
