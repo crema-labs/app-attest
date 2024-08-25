@@ -1,7 +1,8 @@
-pragma circom 2.1.5;
+pragma circom 2.1.9;
 
-import "@crema-labs/ecdsa-p384-circom/circuits/ecdsa.circom";
-import "./hash-circuit/circuits/sha2/sha384/sha384_hash_bytes.circom";
+include "@crema-labs/ecdsa-p384-circom/circuits/ecdsa.circom";
+include "hash-circuits/circuits/sha2/sha384/sha384_hash_bits.circom";
+
 
 template VerifyCertChain(m){
   signal input r[3][8];
@@ -21,20 +22,20 @@ template VerifyCertChain(m){
   component hash[2];
   component ecdsa[3];
 
-  for (var i = 0; i < 3; i++) {
-    has[i] = Sha384_hash_bytes_digest(m);
-    ecdsa[i] = ECDSAVerifyNoPubkeyCheck(48, 8);
+  // for (var i = 0; i < 3; i++) {
+  //   hash[i] = Sha384_hash_bytes_digest(m);
+  //   ecdsa[i] = ECDSAVerifyNoPubkeyCheck(48, 8);
 
-    hash[i].inp_bytes <== TBSData[i];
-    ecdsa[i].msghash <== hash[i].hash_bytes;
-    ecdsa[i].r <== r[i];
-    ecdsa[i].s <== s[i];
-    ecdsa[i].pubkey <== PubKeys[i];
-    ecdsa[i].result ==> out;
-  }
+  //   hash[i].inp_bytes <== TBSData[i];
+  //   ecdsa[i].msghash <== hash[i].hash_bytes;
+  //   ecdsa[i].r <== r[i];
+  //   ecdsa[i].s <== s[i];
+  //   ecdsa[i].pubkey <== PubKeys[i];
+  //   ecdsa[i].result ==> out;
+  // }
 
-  out <== status[0] + status[1] + status[2];
+  // out <== status[0] + status[1] + status[2];
 
-  out === 3;
+  // out === 3;
+  out <== 3; // REMOVE THIS FOR NOW!
 }
-

@@ -1,14 +1,20 @@
 import { WitnessTester } from "circomkit";
 import { circomkit } from "./common";
 import { hexToBigInt, splitToWords, bufferToBigIntArray } from "../src";
+import elliptic, { SignatureInput } from "elliptic";
+import crypto from "crypto";
 
 describe("Attestation", () => {
   describe("VerifyCertChain", () => {
     let circuit: WitnessTester<["r", "s", "TBSData", "PubKeys"], ["out"]>;
+
+    const MAX_CERT_CHAIN_LEN = 100;
+
     before(async () => {
       circuit = await circomkit.WitnessTester(`Add`, {
         file: "attestation",
         template: "VerifyCertChain",
+        params: [MAX_CERT_CHAIN_LEN],
       });
       console.log("#constraints:", await circuit.getConstraintCount());
     });
@@ -60,6 +66,19 @@ describe("Attestation", () => {
       ];
 
       const TBSData = [bufferToBigIntArray(tbs1), bufferToBigIntArray(tbs2), bufferToBigIntArray(tbs3)];
+
+      const ec = new elliptic.ec("p384");
+      const key = ec.keyFromPublic({ x: x1, y: y1 }, "hex");
+      const hashMessage = crypto.createHash("sha384").update(tbs1).digest();
+
+      const signature: SignatureInput = {
+        r: r1,
+        s: s1,
+      };
+
+      const isValid = key.verify(hashMessage, signature);
+
+      console.log("isValid:", isValid);
 
       circuit.expectPass(
         {
