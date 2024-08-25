@@ -14,5 +14,15 @@ export function splitToWords(number: bigint, wordsize: bigint, numberElement: bi
 }
 
 export function hexToBigInt(hex: string) {
-        return BigInt(`0x${hex}`);
-      }
+  return BigInt(`0x${hex}`);
+}
+
+export function bufferToBigIntArray(buffer: Buffer): bigint[] {
+  const bigIntArray: bigint[] = [];
+
+  for (const byte of buffer) {
+    bigIntArray.push(BigInt(byte));
+  }
+
+  return bigIntArray;
+}
