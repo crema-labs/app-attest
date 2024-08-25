@@ -1,5 +1,5 @@
 # Apple app attest Architecture
-This document describes the architecture of the Apple app attest system .
+This document describes the architecture of the Apple app attest system.
 ### Actors 
 
 - **Apple App Attest Server**: The server that issues the attestation keys to the app.
@@ -32,6 +32,10 @@ The iOS app after attestation can request the server for some data with an asser
     - **Intermediate X.509 certificate**: The certificate that signs the leaf certificate.
     - **Root X.509 certificate**: The certificate that signs the intermediate certificate and is the root certificate of the Apple App Attest Server available at [Apple  CA](https://www.apple.com/certificateauthority/private/).
   - All the certificate for attestations are generated using the Elliptic Curve Digital Signature Algorithm (ECDSA) with the P-384 curve.
+  - Assuming there will only be 3 certificates in the attestation object.
+    - The leaf certificate is the first certificate in the `x5c` array needs P-384 curve verification with SHA-256 of RawTBSData from leaf certificate and public key of intermediate certificate.
+    - The intermediate certificate is the second certificate in the `x5c` array needs P-384 curve verification with SHA-384 of RawTBSData from intermediate certificate and public key of root certificate.
+    - THe root certificate is the third certificate in the `x5c` array needs P-384 curve verification with SHA-384 of RawTBSData from root certificate and public key of root certificate itself.
   - The attestation object is in CBOR encoding.
 ```cbor
 {
@@ -47,3 +51,15 @@ The iOS app after attestation can request the server for some data with an asser
 }
 ```
 2. Assertions are signed using the Elliptic Curve Digital Signature Algorithm (ECDSA) with the P-256 curve.
+
+
+### POC and Demo Plan
+We use the flow to prove a user in in Asia without revealing which country you are in.
+1. Create a simple iOS app that address to the above flow to generate attestation object and verify on chain.
+2. Verifier contract that verifies the attestation object and stores the public key hash.
+3. iOS application will generate a assertion with proof that the device is in a particular location.
+4. Verifier contract will verify the assertion and location proof.
+
+### Blockers
+
+1. Implementation of variable length sha-384.

@@ -34,7 +34,7 @@ describe("Attestation", () => {
     const MAX_CERT_CHAIN_LEN = 100;
 
     before(async () => {
-      circuit = await circomkit.WitnessTester(`Add`, {
+      circuit = await circomkit.WitnessTester(`VerifyCertChain`, {
         file: "attestation",
         template: "VerifyCertChain",
         params: [MAX_CERT_CHAIN_LEN],
