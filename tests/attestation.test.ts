@@ -43,6 +43,7 @@ describe("Attestation", () => {
     });
 
     it("should verify correct certificate path", async () => {
+      // generated from example from here https://developer.apple.com/documentation/devicecheck/attestation-object-validation-guide
       const r1 = "224e2f1e5a02eb80b21bbc64ea6102db0364e2116ff82af20710938ab1b864e75182ed02aef16e8f7cd0126b4b0d47b6";
       const s1 = "028b661e6c2cb2ce177c0301f586f2e022ba66323d80262cb48acf59e4e2c3624cfd04d517d0805618995ec2a76bda25";
 
