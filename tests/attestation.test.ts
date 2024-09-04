@@ -1,6 +1,6 @@
 import { WitnessTester } from "circomkit";
 import { circomkit } from "./common";
-import { hexToBigInt, splitToWords, bufferToBigIntArray } from "../src";
+import { hexToBigInt, splitToWords, bufferToBigIntBitArray } from "../src";
 import elliptic, { SignatureInput } from "elliptic";
 import crypto from "crypto";
 
@@ -89,7 +89,7 @@ describe("Attestation", () => {
         [splitToWords(hexToBigInt(x2), 48n, 8n), splitToWords(hexToBigInt(y2), 48n, 8n)],
       ];
 
-      const TBSData = [bufferToBigIntArray(tbs1), bufferToBigIntArray(tbs2), bufferToBigIntArray(tbs3)];
+      const TBSData = [bufferToBigIntBitArray(tbs1), bufferToBigIntBitArray(tbs2), bufferToBigIntBitArray(tbs3)];
 
       verifySig("p384", "sha256", r1, s1, x1, y1, tbs1, "cert 1");
       verifySig("p384", "sha384", r2, s2, x2, y2, tbs2, "cert 2");
@@ -107,3 +107,5 @@ describe("Attestation", () => {
     });
   });
 });
+
+

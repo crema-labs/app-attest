@@ -1,3 +1,6 @@
 [submodule "circuits/hash-circuits"]
 	path = circuits/hash-circuits
 	url = https://github.com/bkomuves/hash-circuits/
+[submodule "circuits/sha256-var"]
+	path = circuits/sha256-var
+	url = https://github.com/noway/sha256-var-circom

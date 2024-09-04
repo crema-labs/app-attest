@@ -17,7 +17,7 @@ export function hexToBigInt(hex: string) {
   return BigInt(`0x${hex}`);
 }
 
-export function bufferToBigIntArray(buffer: Buffer): bigint[] {
+export function bufferToBigIntByteArray(buffer: Buffer): bigint[] {
   const bigIntArray: bigint[] = [];
 
   for (const byte of buffer) {
@@ -25,4 +25,24 @@ export function bufferToBigIntArray(buffer: Buffer): bigint[] {
   }
 
   return bigIntArray;
+}
+
+export function bufferToBigIntBitArray(buffer: Buffer): bigint[] {
+  const bigIntArray: bigint[] = [];
+
+  for (const byte of buffer) {
+    for (let i = 7; i >= 0; i--) {
+      bigIntArray.push(BigInt((byte >> i) & 1));
+    }
+  }
+
+  return bigIntArray;
+}
+
+export function numToBits(num: number): bigint[] {
+  const bits: bigint[] = [];
+  for (let i = 7; i >= 0; i--) {
+    bits.push(BigInt((num >> i) & 1));
+  }
+  return bits;
 }
