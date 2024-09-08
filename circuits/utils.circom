@@ -35,13 +35,15 @@ template BytesToBits(nBytes) {
 }
 
 template PadBits(nBits,target){
+    assert(nBits <= target);
+    
     signal input in[nBits];
     signal output out[target];
 
     for (var i=0; i < target-nBits; i++) {
-        out[i] <== in[i];
+        out[i] <== 0;
     }
     for (var i= target-nBits; i < target; i++) {
-        out[i] <== 0;
+        out[i] <== in[i-(target-nBits)];
     }
 }

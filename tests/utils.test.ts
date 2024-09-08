@@ -36,24 +36,24 @@ describe("PadBits", () => {
     circuit = await circomkit.WitnessTester(`PadBits`, {
       file: "utils",
       template: "PadBits",
-      params: [4, 8],
+      params: [6, 8],
     });
     console.log("#constraints:", await circuit.getConstraintCount());
   });
 
   it("should pad bits correctly", async () => {
-    const inputBits = [1, 0, 1, 1];
-    const expectedOutput = [1, 0, 1, 1, 0, 0, 0, 0];
+    const inputBits = [1, 0, 1, 1, 0, 1];
+    const expectedOutput = [0, 0, 1, 0, 1, 1, 0, 1];
     await circuit.expectPass({ in: inputBits }, { out: expectedOutput });
   });
 });
 
 function byteToBits(byte: number): number[] {
   let bits = [];
-  for (let i = 7; i >= 0; i--) {
+  for (let i = 0; i >= 7; i++) {
     bits.push((byte >> i) & 1);
   }
-  return bits.reverse();
+  return bits;
 }
 
 describe("BytesToBits", () => {
