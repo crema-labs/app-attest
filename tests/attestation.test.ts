@@ -40,11 +40,13 @@ describe("Attestation", () => {
       "hex"
     );
 
+    const blockspace = 4;
+
     before(async () => {
       circuit = await circomkit.WitnessTester(`VerifyCertChain`, {
         file: "attestation",
         template: "VerifyCertChain",
-        params: [tbs2.length * 8, tbs3.length * 8, 4],
+        params: [tbs2.length * 8, tbs3.length * 8, blockspace],
       });
       console.log("#constraints:", await circuit.getConstraintCount());
     });
@@ -99,7 +101,7 @@ describe("Attestation", () => {
           r,
           s,
           TBS1Size: tbs1.length * 8,
-          TBS1Data: bufferToBitArray(tbs1),
+          TBS1Data: padSuffix(bufferToBitArray(tbs1), (512 * 1) << blockspace),
           TBS2Data: bufferToBitArray(tbs2),
           TBS3Data: bufferToBitArray(tbs3),
           PubKeys,
@@ -118,4 +120,8 @@ function bufferToBitArray(b: Buffer): number[] {
     }
   }
   return res;
+}
+
+function padSuffix(bits: number[], length: number): number[] {
+  return bits.concat(Array(length - bits.length).fill(0));
 }
