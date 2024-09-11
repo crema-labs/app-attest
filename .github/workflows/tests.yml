@@ -30,6 +30,9 @@ jobs:
 
       - name: Print Circom version
         run: circom --version
+      
+      - name: Download Hash Circuits repo
+        run: git submodule update --init --recursive
 
       - name: Install dependencies
         run: yarn
