@@ -22,14 +22,16 @@ template SplitToWords(nBits, wordsize, numberElement) {
 template BytesToBits(nBytes) {
     signal input in[nBytes];
     signal output out[nBytes*8];
-
-    component NumToBits[nBytes];
-
+    
+    component num2Bits[nBytes];
+    
     for (var i=0; i < nBytes; i++) {
-        NumToBits[i] = Num2Bits(8);
-        NumToBits[i].in <== in[i];
-       for (var j=0; j < 8; j++) {
-            out[i*8 + j] <== NumToBits[i].out[j];
+        num2Bits[i] = Num2Bits(8);
+        num2Bits[i].in <== in[i];
+        for (var j=0; j < 8; j++) {
+            out[i*8 + (7-j)] <== num2Bits[i].out[j];
+            // For big-endian order ==> out[i*8 + (7-j)] 
+            // For little-endian order ==> use: out[i*8 + j]
         }
     }
 }
