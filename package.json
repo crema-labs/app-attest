@@ -6,8 +6,11 @@
     "compile:test": "npx circomkit compile add && npx circomkit prove add default && npx circomkit verify add default"
   },
   "dependencies": {
+    "@crema-labs/ecdsa-p384-circom": "^0.0.1",
+    "@types/elliptic": "^6.4.18",
     "circomkit": "^0.0.22",
-    "circomlib": "^2.0.5"
+    "circomlib": "^2.0.5",
+    "elliptic": "^6.5.7"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
